@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Dados Compartilhados (Equipe)
+    // Regra genérica para qualquer coleção dentro do app (clients, loans)
+    match /artifacts/{appId}/{document=**} {
+       allow read, write: if request.auth != null;
+    }
+
+    // 2. Perfil de Usuários (Controle de Roles)
+    match /users/{userId} {
+      // O próprio usuário pode ler seu perfil para saber se é admin
+      // Apenas Admins (ou Cloud Functions) deveriam escrever 'role: admin', mas aqui vamos simplificar por enquanto.
+      allow read, write: if request.auth != null;
+    }
+  }
+}
