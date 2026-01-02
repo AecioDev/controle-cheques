@@ -248,6 +248,8 @@ export default function Dashboard() {
     return matchesSearch && matchesYear;
   });
 
+  const showImportButton = isAdmin && searchTerm.trim().toLowerCase() === "importar_agora";
+
   // Pagination Logic
   const totalPages = Math.ceil(filteredLoans.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -310,8 +312,8 @@ export default function Dashboard() {
         </div>
         
         <div className="flex gap-2">
-            {isAdmin && (
-                <Button variant="ghost" onClick={() => setIsImportModalOpen(true)} className="text-slate-600 bg-white border border-slate-200">
+            {showImportButton && (
+                <Button variant="ghost" onClick={() => setIsImportModalOpen(true)} className="text-slate-600 bg-white border border-slate-200 animate-in zoom-in duration-300">
                     <Upload className="mr-2 h-4 w-4" /> Importar
                 </Button>
             )}

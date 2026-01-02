@@ -27,11 +27,9 @@ function Layout() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 z-10 relative">
-        <div className="flex items-center gap-2">
-           <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold">
-             C
-           </div>
-           <h1 className="font-bold text-lg text-slate-800 hidden sm:block">Controle de Empréstimos</h1>
+        <div className="flex items-center gap-3">
+           <img src="/Icons/icon_256.png" alt="Pantanal Factoring" className="w-8 h-8 object-contain" />
+           <h1 className="font-bold text-lg text-slate-800 hidden sm:block">Pantanal Factoring</h1>
         </div>
         
         <div className="flex items-center gap-4">

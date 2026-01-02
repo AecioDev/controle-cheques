@@ -11,8 +11,11 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50">
       <div className="text-center space-y-6 p-8 bg-white rounded-xl shadow-lg border border-slate-100 max-w-sm w-full">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Bem-vindo</h1>
+        <div className="space-y-4">
+          <div className="flex justify-center mb-4">
+             <img src="/Icons/icon_256.png" alt="Logo" className="w-24 h-24 object-contain" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Pantanal Factoring</h1>
           <p className="text-sm text-slate-500">Faça login para gerenciar empréstimos</p>
         </div>
         
