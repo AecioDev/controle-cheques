@@ -12,7 +12,7 @@ import { ImportModal } from "../components/ImportModal";
 import { Timestamp, deleteField } from "firebase/firestore";
 
 export default function Dashboard() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function Dashboard() {
   
   // Filters
   const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const [selectedYear, setSelectedYear] = useState("all");
 
   // Modals
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -218,18 +218,27 @@ export default function Dashboard() {
     setEditingLoan(null);
   }
 
-  // Extract available years from loans + current year
+  // Access Control: Filter loans based on user email if not admin
+  const accessibleLoans = useMemo(() => {
+      if (isAdmin) return loans;
+      if (!user?.email) return [];
+      const client = clients.find(c => c.email === user.email);
+      // Case insensitive email check might be safer, but start exact
+      return client ? loans.filter(l => l.clientId === client.id) : [];
+  }, [loans, clients, isAdmin, user]);
+
+  // Extract available years from accessible loans + current year
   const availableYears = useMemo(() => {
       const years = new Set([currentYear.toString()]);
-      loans.forEach(l => {
+      accessibleLoans.forEach(l => {
           if (l.loanDate?.seconds) {
               years.add(new Date(l.loanDate.seconds * 1000).getFullYear().toString());
           }
       });
       return Array.from(years).sort((a, b) => b.localeCompare(a));
-  }, [loans, currentYear]);
+  }, [accessibleLoans, currentYear]);
 
-  const filteredLoans = loans.filter(l => {
+  const filteredLoans = accessibleLoans.filter(l => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = l.clientName.toLowerCase().includes(searchLower) || 
                           (l.documentNumber && l.documentNumber.toLowerCase().includes(searchLower));

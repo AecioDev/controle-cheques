@@ -4,10 +4,11 @@ import { cn } from "../../lib/utils";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  helperText?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, ...props }, ref) => {
+  ({ className, label, error, helperText, ...props }, ref) => {
     return (
       <div className="space-y-1.5 w-full">
         {label && (
@@ -24,6 +25,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           {...props}
         />
+        {helperText && <p className="text-xs text-slate-500">{helperText}</p>}
         {error && <span className="text-xs text-red-500">{error}</span>}
       </div>
     );

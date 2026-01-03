@@ -17,6 +17,7 @@ export default function ClientsPage() {
   // Form State
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newEmail, setNewEmail] = useState(""); // New Email State
   const [newCpf, setNewCpf] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,6 +42,7 @@ export default function ClientsPage() {
           setEditingClient(client);
           setNewName(client.name);
           setNewPhone(client.phone || "");
+          setNewEmail(client.email || ""); // Set Email
           setNewCpf(client.cpf || "");
           setNewAddress(client.address || "");
       } else {
@@ -60,6 +62,7 @@ export default function ClientsPage() {
           await updateClient(editingClient.id!, {
               name: newName,
               phone: newPhone,
+              email: newEmail,
               cpf: newCpf,
               address: newAddress
           });
@@ -67,6 +70,7 @@ export default function ClientsPage() {
           await addClient({
             name: newName,
             phone: newPhone,
+            email: newEmail,
             cpf: newCpf,
             address: newAddress,
           });
@@ -84,13 +88,15 @@ export default function ClientsPage() {
   function resetForm() {
     setNewName("");
     setNewPhone("");
+    setNewEmail("");
     setNewCpf("");
     setNewAddress("");
     setEditingClient(null);
   }
 
   const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase())
+    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (client.email && client.email.toLowerCase().includes(searchTerm.toLowerCase())) // Search by Email
   );
 
   return (
@@ -113,7 +119,7 @@ export default function ClientsPage() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
         <input
           type="text"
-          placeholder="Buscar cliente por nome..."
+          placeholder="Buscar cliente por nome ou email..."
           className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -138,6 +144,7 @@ export default function ClientsPage() {
               <thead className="bg-slate-50 text-slate-600 font-medium">
                 <tr>
                   <th className="px-6 py-3">Nome</th>
+                  <th className="px-6 py-3">E-mail</th>
                   <th className="px-6 py-3">Telefone</th>
                   <th className="px-6 py-3">CPF</th>
                   <th className="px-6 py-3">Endereço</th>
@@ -148,6 +155,7 @@ export default function ClientsPage() {
                 {filteredClients.map((client) => (
                   <tr key={client.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="px-6 py-3 font-medium text-slate-700">{client.name}</td>
+                    <td className="px-6 py-3 text-slate-500">{client.email || "-"}</td>
                     <td className="px-6 py-3 text-slate-500">{client.phone || "-"}</td>
                     <td className="px-6 py-3 text-slate-500">{client.cpf || "-"}</td>
                     <td className="px-6 py-3 text-slate-500 max-w-xs truncate">{client.address || "-"}</td>
@@ -178,6 +186,14 @@ export default function ClientsPage() {
             onChange={(e) => setNewName(e.target.value)}
             required
             autoFocus
+          />
+          <Input
+            label="E-mail de Acesso"
+            type="email"
+            placeholder="cliente@exemplo.com"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            helperText="Use o e-mail do Google do cliente para permitir acesso aos dados."
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
